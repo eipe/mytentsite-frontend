@@ -16,6 +16,7 @@ var Map = (function() {
         position: "topleft",
         states: [{
             icon: "fa-crosshairs",
+            title: "View my position",
             onClick: function(button, map) {
                 map.locate();
             }

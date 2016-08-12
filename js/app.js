@@ -1,5 +1,5 @@
 /**
- * Created by eivindr on 06.08.2016.
+ * Created by Eivind Røe <eivindroe@gmail.com> on 06.08.2016.
  */
 var Map = (function() {
     var TentMap = L.map("map-tent-sites").setView([63.412222, 10.404722], 4),

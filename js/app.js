@@ -11,9 +11,15 @@ var Map = (function() {
         subdomains: ["a","b","c"]
     }).addTo(TentMap);
 
-    // Add location button
-    L.easyButton('<i class="fa fa-crosshairs" aria-hidden="true"></i>', function(button, map) {
-        map.locate();
+    // Add view position button
+    L.easyButton({
+        position: "topleft",
+        states: [{
+            icon: "fa-crosshairs",
+            onClick: function(button, map) {
+                map.locate();
+            }
+        }]
     }).addTo(TentMap);
 
     TentMap.on("locationfound", function(event) {

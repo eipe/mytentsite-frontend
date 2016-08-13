@@ -1,0 +1,16 @@
+.leaflet-popup-content-wrapper {
+    border-radius: 0;
+}
+
+.leaflet-popup-content {
+    margin: 0;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+    font-size: 22px;
+}
+
+.leaflet-popup-content p {
+    margin: 0;
+    padding: 10px 5px;
+}

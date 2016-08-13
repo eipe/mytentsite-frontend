@@ -23,27 +23,6 @@ var Map = (function() {
         }]
     }).addTo(TentMap);
 
-    // Add select layers button
-    L.easyButton({
-        id: "layers.Selector",
-        position: "topleft",
-        states: [{
-            stateName: "layers.Select",
-            icon: "fa-database",
-            title: "Select map layers",
-            onClick: function(button) {
-                button.state("layers.Close");
-            }
-        }, {
-            stateName: "layers.Close",
-            icon: "fa-times",
-            title: "Close",
-            onClick: function(button) {
-                button.state("layers.Select");
-            }
-        }]
-    }).addTo(TentMap);
-
     TentMap.on("locationfound", function(event) {
         if(locationCircle) {
             TentMap.removeLayer(locationCircle);

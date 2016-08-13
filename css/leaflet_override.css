@@ -14,3 +14,7 @@
     margin: 0;
     padding: 10px 5px;
 }
+
+.easy-button-button:hover {
+    cursor: pointer;
+}

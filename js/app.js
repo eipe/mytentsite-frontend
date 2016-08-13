@@ -5,11 +5,28 @@ var Map = (function() {
     var TentMap = L.map("map-tent-sites").setView([63.412222, 10.404722], 4),
         locationCircle;
 
-    // Add main layer
-    L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        subdomains: ["a","b","c"]
-    }).addTo(TentMap);
+    // Configure layers
+    var WorldImagery = L.tileLayer(
+        'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, '+
+            'GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        }),
+        OpenStreetMap = L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            subdomains: ["a","b","c"]
+        });
+
+    // Configure base maps
+    var baseMaps = {
+        "World imagery": WorldImagery,
+        "Open street map" : OpenStreetMap
+    };
+
+    // Define main layer
+    OpenStreetMap.addTo(TentMap);
+
+    // Define available layers
+    L.control.layers(baseMaps).addTo(TentMap);
 
     // Add view position button
     L.easyButton({

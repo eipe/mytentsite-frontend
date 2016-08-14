@@ -170,6 +170,17 @@
         }
     }
 
+    function Wall() {
+        var $wall = $("#wall");
+        return {
+            initialize: function() {
+            }
+        }
+    }
+
     Map = new Map();
     Map.initialize();
+
+    Wall = new Wall();
+    Wall.initialize();
 })(jQuery);

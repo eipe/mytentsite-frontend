@@ -3,6 +3,39 @@
  */
 (function($) {
     'use strict';
+    var viewMode;
+
+    function getViewMode() {
+        if(viewMode) {
+            return viewMode;
+        }
+
+        if(localStorage.getItem("App.viewMode")) {
+            viewMode = localStorage.getItem("App.viewMode");
+            return viewMode;
+        } else {
+            // Map is the default view mode
+            viewMode = "map";
+        }
+    }
+
+    function toggleViewMode() {
+        var currentViewMode = getViewMode();
+        if(currentViewMode == "map") {
+            viewMode = "wall";
+        } else {
+            viewMode = "map";
+        }
+        localStorage.setItem("App.viewMode", viewMode);
+
+        if(getViewMode() == "map") {
+            Wall.hide();
+            Map.show();
+        } else if(getViewMode() == "wall") {
+            Map.hide();
+            Wall.show();
+        }
+    }
 
     function getTime() {
         if(typeof Date.now !== typeof undefined) {
@@ -166,14 +199,38 @@
                     alert("Could not find your location. Please turn on gps and try again");
                     console.log(event.message);
                 });
+
+                if(getViewMode() == "map") {
+                    this.show();
+                } else {
+                    this.hide();
+                }
+            },
+            show: function() {
+                $map.css("visibility", "visible");
+            },
+            hide: function() {
+                $map.css("visibility", "hidden");
             }
         }
     }
 
     function Wall() {
         var $wall = $("#wall");
+
         return {
             initialize: function() {
+                if(getViewMode() == "wall") {
+                    this.show();
+                } else {
+                    this.hide();
+                }
+            },
+            show: function() {
+                $wall.css("visibility", "visible");
+            },
+            hide: function() {
+                $wall.css("visibility", "hidden");
             }
         }
     }
@@ -183,4 +240,24 @@
 
     Wall = new Wall();
     Wall.initialize();
+
+    function handleViewChange($controller) {
+        var $toggleIcon = $controller.find("i");
+        if(getViewMode() == "map") {
+            $toggleIcon.attr("class", $toggleIcon.data("icon-map"));
+        } else {
+            $toggleIcon.attr("class", $toggleIcon.data("icon-wall"));
+        }
+    }
+
+    var $viewController = $("#view-controller");
+
+    // Load initial state
+    handleViewChange($viewController);
+
+    // Handle change
+    $viewController.on("click", function() {
+        toggleViewMode();
+        handleViewChange($(this));
+    });
 })(jQuery);

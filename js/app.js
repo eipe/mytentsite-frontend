@@ -156,7 +156,17 @@
                 }).openPopup();
             });
             photoLayer.add(tentSites).addTo(TentMap);
-            //TentMap.fitBounds(photoLayer.getBounds());
+        }
+
+        function markLocation(latitude, longitude, accuracy) {
+            if(locationCircle) {
+                TentMap.removeLayer(locationCircle);
+            }
+            locationCircle = L.circle([latitude, longitude], accuracy, {
+                color: "red",
+                fillColor: "#f03",
+                fillOpacity: 0.5
+            }).addTo(TentMap);
         }
 
         return {
@@ -184,15 +194,8 @@
                 }).addTo(TentMap);
 
                 TentMap.on("locationfound", function(event) {
-                    if(locationCircle) {
-                        TentMap.removeLayer(locationCircle);
-                    }
+                    markLocation(event.latlng.lat, event.latlng.lng, event.accuracy);
                     TentMap.setView(event.latlng, 10);
-                    locationCircle = L.circle(event.latlng, event.accuracy, {
-                        color: "red",
-                        fillColor: "#f03",
-                        fillOpacity: 0.5
-                    }).addTo(TentMap);
                 });
 
                 TentMap.on("locationerror", function(event) {

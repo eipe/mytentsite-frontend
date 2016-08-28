@@ -3,7 +3,7 @@
  */
 (function($) {
     'use strict';
-    var view, map, wall, sites;
+    var view, camera, map, wall, sites;
 
     function getTime() {
         if(typeof Date.now !== typeof undefined) {
@@ -174,6 +174,15 @@
                         placeSites(sites);
                     });
                 }
+            },
+            updateView: function(latitude, longitude) {
+                if(!latitude || !longitude) {
+                    return false;
+                }
+                if(!loaded) {
+                    this.initialize();
+                }
+                TentMap.panTo(new L.LatLng(latitude, longitude), {animate: true, duration: 0.2, noMoveStart: true, easyLinearity: 0.25});
             }
         }
     }
@@ -189,6 +198,12 @@
                     photo.lat+'" data-image-longitude="'+photo.lng+'" />' +
                     '</div>');
             });
+
+            $("#wall").on("click", "img", function() {
+                var $photo = $(this);
+                view.changePage("map");
+                map.updateView($photo.data("image-latitude"), $photo.data("image-longitude"));
+            });
         }
 
         return {
@@ -203,6 +218,78 @@
         }
     }
 
+    function Camera() {
+        var $photo, $shutter, $cancel, $store, $location, location;
+
+        function uploadPicture(callback) {
+            Webcam.snap(function(data_uri) {
+                Webcam.upload(data_uri, 'upload.php', function(code, text) {
+                    callback(code, text);
+                });
+            });
+        }
+
+        function togglePhotoControllers() {
+            $store.toggleClass("is-hidden");
+            $shutter.toggleClass("is-hidden");
+            $cancel.toggleClass("is-hidden");
+        }
+
+        return {
+            initialize: function() {
+                Webcam.set();
+                Webcam.attach("#camera-photo");
+                $photo = $("#camera-photo");
+                $shutter = $("#camera-photo-shutter");
+                $location = $("#camera-photo-location");
+                $cancel = $("#camera-photo-cancel");
+                $store = $("#camera-photo-store");
+                $shutter.on("click", function() {
+                    Webcam.freeze();
+                    togglePhotoControllers();
+                });
+
+                $cancel.on("click", function() {
+                    Webcam.unfreeze();
+                    togglePhotoControllers();
+                });
+
+                $store.on("click", function() {
+                    uploadPicture(function(code, text) {
+                        console.log(code);
+                        console.log(text);
+                        togglePhotoControllers();
+                    });
+                });
+
+                $location.on("click", function() {
+                    if(!$(this).data("location")) {
+                        if(typeof navigator.geolocation === typeof undefined) {
+                            $location.addClass("warning");
+                            $(this).data("location", false);
+                            return;
+                        }
+                        navigator.geolocation.getCurrentPosition(function(position) {
+                            $(this).data("location", true);
+                            $location.addClass("success").attr("title", "Location found");
+                            location = {
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude,
+                                accuracy: position.coords.accuracy
+                            };
+                        }, function() {
+                            $location.addClass("warning");
+                            $(this).data("location", false);
+                        });
+                    } else {
+                        $location.addClass("secondary");
+                        location = null;
+                    }
+                });
+            }
+        }
+    }
+
     function View() {
         var $currentPage, $currentPageContent, currentPageName;
 
@@ -210,7 +297,9 @@
             if(typeof $currentPage !== typeof undefined) {
                 $currentPage.toggleClass("is-active");
                 $currentPageContent.toggleClass("is-hidden");
-                if(currentPageName == "map") {
+                if(currentPageName == "camera") {
+                    camera.initialize();
+                } else if(currentPageName == "map") {
                     map.initialize();
                 } else if(currentPageName == "wall") {
                     wall.initialize();
@@ -241,6 +330,7 @@
         return {
             initialize: function() {
                 sites = new Sites();
+                camera = new Camera();
                 map = new Map();
                 wall = new Wall();
                 var $menu = $("#menu");
@@ -254,6 +344,9 @@
                     var $page = $(this);
                     setCurrentPage($page, $page.data("page"));
                 });
+            },
+            changePage: function(pageName) {
+                setCurrentPage(findPageByName(pageName), pageName);
             }
         }
     }

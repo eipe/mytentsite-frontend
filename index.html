@@ -11,20 +11,41 @@
         <link rel="stylesheet" href="bower_components/Leaflet.Photo/Leaflet.Photo.css">
         <link rel="stylesheet" href="bower_components/Leaflet.EasyButton/src/easy-button.css">
         <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="bower_components/foundation-sites/dist/foundation-flex.min.css">
+        <link rel="stylesheet" href="bower_components/foundation-sites/dist/foundation.min.css">
         <link rel="stylesheet" href="css/app.css">
-        <link rel="stylesheet" href="css/leaflet_override.css">
+        <link rel="stylesheet" href="css/app_normalize.css">
     </head>
     <body>
-        <div id="map-tent-sites"></div>
-        <div id="wall"></div>
-        <div id="view-controller">
-            <i class="" data-icon-map="fa fa-map-o" data-icon-wall="fa fa-th" title="Change view mode"></i>
+        <nav class="top-bar">
+            <ul id="menu" class="menu align-center" data-page-default="map">
+                <li data-page="map">
+                    <a href="#/map" title="">
+                        <i class="fa fa-map-o"></i>
+                    </a>
+                </li>
+                <li data-page="wall">
+                    <a href="#/wall" title="">
+                        <i class="fa fa-th"></i>
+                    </a>
+                </li>
+                <li data-page="info">
+                    <a href="#/info" title="Information"><i class="fa fa-info"></i></a></li>
+            </ul>
+        </nav>
+        <div id="content">
+            <div class="page is-hidden" id="map"></div>
+            <div class="page is-hidden" id="wall"></div>
+            <div class="page is-hidden" id="info">
+                <h1>About mytent.site</h1>
+            </div>
         </div>
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/leaflet/dist/leaflet.js"></script>
         <script src="bower_components/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
         <script src="bower_components/Leaflet.Photo/Leaflet.Photo.js"></script>
         <script src="bower_components/Leaflet.EasyButton/src/easy-button.js"></script>
+        <script src="bower_components/foundation-sites/dist/foundation.min.js"></script>
         <script src="js/app.js"></script>
     </body>
 </html>

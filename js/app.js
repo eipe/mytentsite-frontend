@@ -235,6 +235,12 @@
             $cancel.toggleClass("is-hidden");
         }
 
+        function clearPhotoDetails() {
+            $("#camera-photo-caption").val("");
+            $location.removeAttr("location");
+            $location.toggleClass("success");
+        }
+
         return {
             initialize: function() {
                 Webcam.set();
@@ -258,6 +264,7 @@
                     uploadPicture(function(code, text) {
                         console.log(code);
                         console.log(text);
+                        clearPhotoDetails();
                         togglePhotoControllers();
                     });
                 });

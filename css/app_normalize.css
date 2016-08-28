@@ -1,3 +1,4 @@
+/* Customizing leaflet design */
 .leaflet-popup-content-wrapper {
     border-radius: 0;
 }
@@ -15,6 +16,23 @@
     padding: 10px 5px;
 }
 
+/* Foundation overrides */
+.easy-button-button {
+    padding: 0;
+    margin: 0;
+}
+
 .easy-button-button:hover {
     cursor: pointer;
+}
+.top-bar, ul.menu {
+    background-color: #444;
+    padding: 0;
+}
+.menu a {
+    color: #bbb;
+}
+
+.menu li.is-active a {
+    color: #eee;
 }

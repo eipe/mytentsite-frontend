@@ -3,39 +3,7 @@
  */
 (function($) {
     'use strict';
-    var viewMode;
-
-    function getViewMode() {
-        if(viewMode) {
-            return viewMode;
-        }
-
-        if(localStorage.getItem("App.viewMode")) {
-            viewMode = localStorage.getItem("App.viewMode");
-            return viewMode;
-        } else {
-            // Map is the default view mode
-            viewMode = "map";
-        }
-    }
-
-    function toggleViewMode() {
-        var currentViewMode = getViewMode();
-        if(currentViewMode == "map") {
-            viewMode = "wall";
-        } else {
-            viewMode = "map";
-        }
-        localStorage.setItem("App.viewMode", viewMode);
-
-        if(getViewMode() == "map") {
-            Wall.hide();
-            Map.show();
-        } else if(getViewMode() == "wall") {
-            Map.hide();
-            Wall.show();
-        }
-    }
+    var view, map, wall, sites;
 
     function getTime() {
         if(typeof Date.now !== typeof undefined) {
@@ -46,7 +14,7 @@
         }
     }
 
-    var Sites = (function() {
+    function Sites() {
         var fncCallbackOnFetchedSites,
             strSiteApiUrl = "http://api.mytent.site/tentsites";
 
@@ -106,10 +74,11 @@
                 fetchSites();
             }
         }
-    })();
+    }
 
     function Map() {
-        var TentMap,
+        var loaded = false,
+            TentMap,
             locationCircle,
             $map;
 
@@ -131,7 +100,7 @@
         };
 
         function bindMap() {
-            TentMap = L.map("map-tent-sites").setView([63.412222, 10.404722], 4);
+            TentMap = L.map("map").setView([63.412222, 10.404722], 4);
         }
 
         function addLayerToMap(layer) {
@@ -171,96 +140,126 @@
 
         return {
             initialize: function() {
-                bindMap();
-                addLayerToMap(OpenStreetMap);
-                addLayersToMap(baseMaps);
+                if(loaded === false) {
+                    loaded = true;
+                    bindMap();
+                    addLayerToMap(OpenStreetMap);
+                    addLayersToMap(baseMaps);
 
-                Sites.onFetchedSites(function(sites) {
-                    placeSites(sites);
-                });
+                    $map = $("#map");
 
-                $map = $("#map-tent-sites");
+                    // Add view position button
+                    L.easyButton({
+                        position: "topleft",
+                        states: [{
+                            icon: "fa-crosshairs",
+                            title: "View my position",
+                            onClick: function(button, map) {
+                                map.locate();
+                            }
+                        }]
+                    }).addTo(TentMap);
 
-                // Add view position button
-                L.easyButton({
-                    position: "topleft",
-                    states: [{
-                        icon: "fa-crosshairs",
-                        title: "View my position",
-                        onClick: function(button, map) {
-                            map.locate();
-                        }
-                    }]
-                }).addTo(TentMap);
+                    TentMap.on("locationfound", function(event) {
+                        markLocation(event.latlng.lat, event.latlng.lng, event.accuracy);
+                        TentMap.setView(event.latlng, 10);
+                    });
 
-                TentMap.on("locationfound", function(event) {
-                    markLocation(event.latlng.lat, event.latlng.lng, event.accuracy);
-                    TentMap.setView(event.latlng, 10);
-                });
+                    TentMap.on("locationerror", function(event) {
+                        alert("Could not find your location. Please turn on gps and try again");
+                        console.log(event.message);
+                    });
 
-                TentMap.on("locationerror", function(event) {
-                    alert("Could not find your location. Please turn on gps and try again");
-                    console.log(event.message);
-                });
-
-                if(getViewMode() == "map") {
-                    this.show();
-                } else {
-                    this.hide();
+                    sites.onFetchedSites(function(sites) {
+                        placeSites(sites);
+                    });
                 }
-            },
-            show: function() {
-                $map.css("visibility", "visible");
-            },
-            hide: function() {
-                $map.css("visibility", "hidden");
             }
         }
     }
 
     function Wall() {
-        var $wall = $("#wall");
+        var $wall = $("#wall"),
+            loaded = false;
+
+        function createImageWall(sites) {
+            $.each(sites, function(key, photo) {
+                $wall.append('<div>' +
+                    '<img src="'+photo.img_location+'" data-image-id="'+photo.id+'" data-image-latitude="'+
+                    photo.lat+'" data-image-longitude="'+photo.lng+'" />' +
+                    '</div>');
+            });
+        }
 
         return {
             initialize: function() {
-                if(getViewMode() == "wall") {
-                    this.show();
-                } else {
-                    this.hide();
+                if(loaded === false) {
+                    loaded = true;
+                    sites.onFetchedSites(function(sites) {
+                        createImageWall(sites);
+                    });
                 }
-            },
-            show: function() {
-                $wall.css("visibility", "visible");
-            },
-            hide: function() {
-                $wall.css("visibility", "hidden");
             }
         }
     }
 
-    Map = new Map();
-    Map.initialize();
+    function View() {
+        var $currentPage, $currentPageContent, currentPageName;
 
-    Wall = new Wall();
-    Wall.initialize();
+        function toggleCurrentPage() {
+            if(typeof $currentPage !== typeof undefined) {
+                $currentPage.toggleClass("is-active");
+                $currentPageContent.toggleClass("is-hidden");
+                if(currentPageName == "map") {
+                    map.initialize();
+                } else if(currentPageName == "wall") {
+                    wall.initialize();
+                }
+            }
+        }
 
-    function handleViewChange($controller) {
-        var $toggleIcon = $controller.find("i");
-        if(getViewMode() == "map") {
-            $toggleIcon.attr("class", $toggleIcon.data("icon-map"));
-        } else {
-            $toggleIcon.attr("class", $toggleIcon.data("icon-wall"));
+        function setCurrentPage($page, pageName) {
+            if(pageName === currentPageName) {
+                return;
+            }
+            toggleCurrentPage();
+            localStorage.setItem("App.View.currentPage", pageName);
+            $currentPage = $page;
+            $currentPageContent = getPageContentObject(pageName);
+            currentPageName = pageName;
+            toggleCurrentPage();
+        }
+
+        function getPageContentObject(page) {
+            return $("#content").find('#' + page);
+        }
+
+        function findPageByName(pageName) {
+            return $("#menu").find('li[data-page="'+pageName+'"]');
+        }
+
+        return {
+            initialize: function() {
+                sites = new Sites();
+                map = new Map();
+                wall = new Wall();
+                var $menu = $("#menu");
+                var tmpPageName = localStorage.getItem("App.View.currentPage");
+                if(!tmpPageName) {
+                    tmpPageName =  $menu.data("page-default");
+                }
+                setCurrentPage(findPageByName(tmpPageName), tmpPageName);
+
+                $menu.on("click", "li", function() {
+                    var $page = $(this);
+                    setCurrentPage($page, $page.data("page"));
+                });
+            }
         }
     }
 
-    var $viewController = $("#view-controller");
+    view = new View();
+    view.initialize();
 
-    // Load initial state
-    handleViewChange($viewController);
-
-    // Handle change
-    $viewController.on("click", function() {
-        toggleViewMode();
-        handleViewChange($(this));
-    });
+    $(document).foundation();
 })(jQuery);

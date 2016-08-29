@@ -23,8 +23,9 @@ nav {
 }
 
 #camera-photo {
-    width: 500px;
-    height: 375px;
+    width: 100vw;
+    height: calc(100vh - 90px);
+    margin: 0 auto;
 }
 
 #wall {

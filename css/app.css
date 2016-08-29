@@ -22,9 +22,9 @@ nav {
     width: 100vw;
 }
 
-#camera-photo {
-    width: 100vw;
-    height: calc(100vh - 90px);
+#camera, #camera-photo {
+    width: 500px;
+    height: 375px;
     margin: 0 auto;
 }
 

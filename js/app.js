@@ -115,7 +115,9 @@
             var photoLayer = L.photo.cluster().on("click", function (evt) {
                 var photo = evt.layer.photo,
                     template = '<img src="{img_location}" width="300" height="300" /></a><p>{caption}</p>';
-                if (photo.video && (!!document.createElement("video").canPlayType("video/mp4; codecs=avc1.42E01E,mp4a.40.2"))) {
+                if (photo.video &&
+                    (!!document.createElement("video").canPlayType("video/mp4; codecs=avc1.42E01E,mp4a.40.2"))
+                ) {
                     template = '<video autoplay controls poster="{img_location}" width="300" height="300">' +
                         '<source src="{video}" type="video/mp4"/></video>';
                 }
@@ -182,7 +184,10 @@
                 if(!loaded) {
                     this.initialize();
                 }
-                TentMap.panTo(new L.LatLng(latitude, longitude), {animate: true, duration: 0.2, noMoveStart: true, easyLinearity: 0.25});
+                TentMap.panTo(
+                    new L.LatLng(latitude, longitude),
+                    {animate: true, duration: 0.2, noMoveStart: true, easyLinearity: 0.25}
+                );
             },
             destruct: function() {
 
@@ -199,7 +204,8 @@
                 $wall.append('<div>' +
                     '<img src="'+photo.img_location+'" data-image-id="'+photo.id+'" data-image-latitude="'+
                     photo.lat+'" data-image-longitude="'+photo.lng+'" />' +
-                    '</div>');
+                    '</div>'
+                );
             });
 
             $("#wall").on("click", "img", function() {
@@ -219,7 +225,6 @@
                 }
             },
             destruct: function() {
-
             }
         }
     }

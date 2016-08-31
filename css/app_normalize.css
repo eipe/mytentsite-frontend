@@ -11,9 +11,17 @@
     font-size: 22px;
 }
 
+.leaflet-popup-content {
+    width: auto!important; /* Because leaflet adds a style directly to element we need to flag this as important! */
+}
+
 .leaflet-popup-content p {
     margin: 0;
     padding: 10px 5px;
+}
+
+.leaflet-popup-content-wrapper {
+    padding: 0;
 }
 
 /* Foundation overrides */

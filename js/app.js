@@ -114,16 +114,15 @@
         function placeSites(tentSites) {
             var photoLayer = L.photo.cluster().on("click", function (evt) {
                 var photo = evt.layer.photo,
-                    template = '<img src="{img_location}" width="300" height="300" /></a><p>{caption}</p>';
+                    template = '<img src="{img_location}" /></a><p>{caption}</p>';
                 if (photo.video &&
                     (!!document.createElement("video").canPlayType("video/mp4; codecs=avc1.42E01E,mp4a.40.2"))
                 ) {
-                    template = '<video autoplay controls poster="{img_location}" width="300" height="300">' +
+                    template = '<video autoplay controls poster="{img_location}">' +
                         '<source src="{video}" type="video/mp4"/></video>';
                 }
                 evt.layer.bindPopup(L.Util.template(template, photo), {
-                    className: "leaflet-popup-photo",
-                    minWidth: 300
+                    className: "leaflet-popup-photo"
                 }).openPopup();
             });
             photoLayer.add(tentSites).addTo(TentMap);

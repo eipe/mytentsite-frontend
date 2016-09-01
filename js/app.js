@@ -200,17 +200,28 @@
 
         function createImageWall(sites) {
             $.each(sites, function(key, photo) {
-                $wall.append('<div>' +
-                    '<img src="'+photo.img_location+'" data-image-id="'+photo.id+'" data-image-latitude="'+
-                    photo.lat+'" data-image-longitude="'+photo.lng+'" />' +
-                    '</div>'
+                $wall.append('<div class="wall-image-container" ' +
+                    'data-image-id="'+photo.id+'" data-image-latitude="'+photo.lat+'" ' +
+                    'data-image-longitude="'+photo.lng+'" data-full-size="'+photo.img_location+'">' +
+                    '<img src="'+photo.img_location+'" />' +
+                    '<div class="wall-image-controllers">' +
+                    '<i class="wall-image-view-map fa fa-map-marker" title="View image on map"></i>' +
+                    '<i class="wall-image-enlarge fa fa-arrows-alt fa-3x" title="Enlarge image"></i>' +
+                    '</div></div>'
                 );
             });
 
-            $("#wall").on("click", "img", function() {
-                var $photo = $(this);
+            $wall.on("click", ".wall-image-view-map", function(e) {
+                e.stopPropagation();
+                var $photoContainer = $(this).closest(".wall-image-container");
                 view.changePage("map");
-                map.updateView($photo.data("image-latitude"), $photo.data("image-longitude"));
+                map.updateView($photoContainer.data("image-latitude"), $photoContainer.data("image-longitude"));
+            });
+
+            // Support for non-mouse interaction
+            $wall.on("click", ".wall-image-container", function(e) {
+                e.stopPropagation();
+                $(this).toggleClass("wall-image-focus");
             });
         }
 

@@ -44,3 +44,9 @@
 .menu li.is-active a {
     color: #eee;
 }
+
+.reveal {
+    top: auto;
+    padding: 2px;
+    border: 0;
+}

@@ -197,6 +197,7 @@
 
     function Wall() {
         var $wall = $("#wall"),
+            $wallFullscreen = $("#wall-fullscreen"),
             loaded = false;
 
         function createImageWall(sites) {
@@ -215,8 +216,20 @@
             $(".wall-image-view-map").on("click", function(e) {
                 e.stopPropagation();
                 var $photoContainer = $(this).closest(".wall-image-container");
+                if($photoContainer.hasClass("reveal")) {
+                    $photoContainer.foundation("close");
+                }
                 view.changePage("map");
                 map.updateView($photoContainer.data("image-latitude"), $photoContainer.data("image-longitude"));
+            });
+
+            $(".wall-image-enlarge").on("click", function(e) {
+                e.stopPropagation();
+                var $photoContainer = $(this).closest(".wall-image-container");
+                $wallFullscreen.attr("data-image-latitude", $photoContainer.data("image-latitude")).
+                    attr("data-image-longitude", $photoContainer.data("image-longitude"));
+                $wallFullscreen.find("img").attr("src", $photoContainer.data("image-location"));
+                $wallFullscreen.foundation("open");
             });
 
             // Support for non-mouse interaction
@@ -241,6 +254,7 @@
                     sites.onFetchedSites(function(sites) {
                         createImageWall(sites);
                     });
+                    $("#wall-fullscreen").foundation();
                 }
             },
             destruct: function() {

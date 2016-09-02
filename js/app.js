@@ -203,16 +203,16 @@
             $.each(sites, function(key, photo) {
                 $wall.append('<div class="wall-image-container" ' +
                     'data-image-id="'+photo.id+'" data-image-latitude="'+photo.lat+'" ' +
-                    'data-image-longitude="'+photo.lng+'" data-full-size="'+photo.img_location+'">' +
+                    'data-image-longitude="'+photo.lng+'" data-image-location="'+photo.img_location+'">' +
                     '<img src="'+photo.img_location+'" />' +
-                    '<div class="wall-image-controllers">' +
+                    '<div class="wall-image-controllers is-hidden">' +
                     '<i class="wall-image-view-map fa fa-map-marker" title="View image on map"></i>' +
                     '<i class="wall-image-enlarge fa fa-arrows-alt fa-3x" title="Enlarge image"></i>' +
                     '</div></div>'
                 );
             });
 
-            $wall.on("click", ".wall-image-view-map", function(e) {
+            $(".wall-image-view-map").on("click", function(e) {
                 e.stopPropagation();
                 var $photoContainer = $(this).closest(".wall-image-container");
                 view.changePage("map");
@@ -220,9 +220,17 @@
             });
 
             // Support for non-mouse interaction
-            $wall.on("click", ".wall-image-container", function(e) {
+            $(document).on("click", ".wall-image-container", function(e) {
                 e.stopPropagation();
-                $(this).toggleClass("wall-image-focus");
+                $(this).find(".wall-image-controllers").toggleClass("is-hidden");
+            });
+            $(document).on("mouseover", ".wall-image-container", function(e) {
+                e.stopPropagation();
+                $(this).find(".wall-image-controllers").removeClass("is-hidden");
+            });
+            $(document).on("mouseout", ".wall-image-container", function(e) {
+                e.stopPropagation();
+                $(this).find(".wall-image-controllers").addClass("is-hidden");
             });
         }
 

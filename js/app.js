@@ -171,7 +171,6 @@
 
                 TentMap.on("locationerror", function(event) {
                     alert("Could not find your location. Please turn on gps and try again");
-                    console.log(event.message);
                 });
 
                 sites.onFetchedSites(function(sites) {
@@ -282,8 +281,6 @@
 
             $store.on("click", function() {
                 uploadPicture(function(code, text) {
-                    console.log(code);
-                    console.log(text);
                     clearPhotoDetails();
                     togglePhotoControllers();
                 });

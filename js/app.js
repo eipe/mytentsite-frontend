@@ -254,7 +254,6 @@
                     sites.onFetchedSites(function(sites) {
                         createImageWall(sites);
                     });
-                    $("#wall-fullscreen").foundation();
                 }
             },
             destruct: function() {

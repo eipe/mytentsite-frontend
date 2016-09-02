@@ -141,40 +141,42 @@
 
         return {
             initialize: function() {
-                if(loaded === false) {
-                    loaded = true;
-                    bindMap();
-                    addLayerToMap(OpenStreetMap);
-                    addLayersToMap(baseMaps);
-
-                    $map = $("#map");
-
-                    // Add view position button
-                    L.easyButton({
-                        position: "topleft",
-                        states: [{
-                            icon: "fa-crosshairs",
-                            title: "View my position",
-                            onClick: function(button, map) {
-                                map.locate();
-                            }
-                        }]
-                    }).addTo(TentMap);
-
-                    TentMap.on("locationfound", function(event) {
-                        markLocation(event.latlng.lat, event.latlng.lng, event.accuracy);
-                        TentMap.setView(event.latlng, 10);
-                    });
-
-                    TentMap.on("locationerror", function(event) {
-                        alert("Could not find your location. Please turn on gps and try again");
-                        console.log(event.message);
-                    });
-
-                    sites.onFetchedSites(function(sites) {
-                        placeSites(sites);
-                    });
+                if(loaded === true) {
+                    TentMap.invalidateSize();
+                    return;
                 }
+                loaded = true;
+                bindMap();
+                addLayerToMap(OpenStreetMap);
+                addLayersToMap(baseMaps);
+
+                $map = $("#map");
+
+                // Add view position button
+                L.easyButton({
+                    position: "topleft",
+                    states: [{
+                        icon: "fa-crosshairs",
+                        title: "View my position",
+                        onClick: function(button, map) {
+                            map.locate();
+                        }
+                    }]
+                }).addTo(TentMap);
+
+                TentMap.on("locationfound", function(event) {
+                    markLocation(event.latlng.lat, event.latlng.lng, event.accuracy);
+                    TentMap.setView(event.latlng, 10);
+                });
+
+                TentMap.on("locationerror", function(event) {
+                    alert("Could not find your location. Please turn on gps and try again");
+                    console.log(event.message);
+                });
+
+                sites.onFetchedSites(function(sites) {
+                    placeSites(sites);
+                });
             },
             updateView: function(latitude, longitude) {
                 if(!latitude || !longitude) {

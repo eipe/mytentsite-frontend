@@ -196,21 +196,30 @@
     }
 
     function Wall() {
-        var $wall = $("#wall"),
+        var $wallImageContainer = $("#wall-images"),
             $wallFullscreen = $("#wall-fullscreen"),
             loaded = false;
 
         function createImageWall(sites) {
+            var $preLoadedContainers = $wallImageContainer.find(".wall-image-container"),
+                index = $preLoadedContainers.index();
             $.each(sites, function(key, photo) {
-                $wall.append('<div class="wall-image-container" ' +
-                    'data-image-id="'+photo.id+'" data-image-latitude="'+photo.lat+'" ' +
-                    'data-image-longitude="'+photo.lng+'" data-image-location="'+photo.img_location+'">' +
-                    '<img src="'+photo.img_location+'" />' +
-                    '<div class="wall-image-controllers is-hidden">' +
+                var $container = $preLoadedContainers.eq(index);
+                index++;
+                if($container.length === 0) {
+                    $container = $("<div>").addClass("wall-image-container").appendTo($wallImageContainer);
+                }
+
+                $container.attr("data-image-id", photo.id)
+                    .attr("data-image-latitude", photo.lat)
+                    .attr("data-image-longitude", photo.lng)
+                    .attr("data-image-location", photo.img_location);
+
+                $container.append($("<img>").attr("src", photo.img_location));
+                $container.append('<div class="wall-image-controllers is-hidden">' +
                     '<i class="wall-image-view-map fa fa-map-marker" title="View image on map"></i>' +
                     '<i class="wall-image-enlarge fa fa-arrows-alt fa-3x" title="Enlarge image"></i>' +
-                    '</div></div>'
-                );
+                    '</div>');
             });
 
             $(".wall-image-view-map").on("click", function(e) {

@@ -34,6 +34,10 @@ nav {
 }
 
 #wall {
+    overflow-y: auto;
+}
+
+#wall-images {
     padding: 0;
     font-size: 0;
     display: -ms-flexbox;
@@ -43,10 +47,10 @@ nav {
     flex-flow: row wrap;
     display: -webkit-box;
     display: flex;
-    overflow-y: auto;
 }
 
 #wall div.wall-image-container {
+    background: url("../images/fa-camera.png") no-repeat center;
     -webkit-box-flex: auto;
     -ms-flex: auto;
     flex: auto;

@@ -25,7 +25,7 @@
     "install": "^1.0.4",
     "font-awesome": "fontawesome#^4.6.3",
     "foundation-sites": "^6.2.3",
-    "jpeg_camera": "https://github.com/amw/jpeg_camera.git#master"
+    "webcamjs": "^1.0.15"
   },
   "resolutions": {
     "jquery": "~2.2.0"

@@ -279,12 +279,27 @@
     }
 
     function Camera() {
-        var $photo, $shutter, $cancel, $store, $location, location, loaded = false;
+        var $photo, $shutter, $cancel, $store, $location, location, loaded = false, options = {target: "upload.php"};
+
+        function extractBase64FromDataUri(data_uri) {
+            return data_uri.replace(/^data\:image\/\w+\;base64\,/, '');
+        }
 
         function uploadPicture(callback) {
             Webcam.snap(function(data_uri) {
-                Webcam.upload(data_uri, 'upload.php', function(code, text) {
-                    callback(code, text);
+                $.ajax({
+                    url: options.target,
+                    method: "POST",
+                    data: {
+                        photo: extractBase64FromDataUri(data_uri),
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                        caption: $("#camera-photo-caption").val()
+                    }
+                }).success(function(response) {
+                    callback(200, response);
+                }).error(function(response) {
+                    callback(400, response);
                 });
             });
         }

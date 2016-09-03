@@ -284,11 +284,13 @@
             $location.toggleClass("success");
         }
 
-        function setLocation(latitude, longitude, accuracy) {
+        function setLocation(lat, lng, accuracy) {
             $location.data("location", true).addClass("success").attr("title", "Location found");
-            location.latitude = latitude;
-            location.longitude = longitude;
-            location.accuracy = accuracy;
+            location = {
+                latitude: lat,
+                longitude: lng,
+                accuracy: accuracy
+            };
         }
 
         function setupCameraAndListeners() {

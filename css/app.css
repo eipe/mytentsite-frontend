@@ -35,7 +35,6 @@ nav {
 
 #wall {
     overflow-y: auto;
-    padding-bottom: 80px;
 }
 
 #wall-images {
@@ -48,7 +47,6 @@ nav {
     flex-flow: row wrap;
     display: -webkit-box;
     display: flex;
-    margin-bottom: 40px;
 }
 
 #wall div.wall-image-container {

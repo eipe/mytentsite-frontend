@@ -269,7 +269,7 @@
                         sites.onFetchedSites(function(sites) {
                             createImageWall(sites);
                         });
-                        $wall.animate({scrollTop: $wall.prop("scrollHeight") - 185}, 1000);
+                        $wall.animate({scrollTop: $wall.prop("scrollHeight") - 80}, 1000);
                     });
                 }
             },

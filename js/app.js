@@ -285,7 +285,7 @@
         }
 
         function setLocation(latitude, longitude, accuracy) {
-            $(this).data("location", true).addClass("success").attr("title", "Location found");
+            $location.data("location", true).addClass("success").attr("title", "Location found");
             location.latitude = latitude;
             location.longitude = longitude;
             location.accuracy = accuracy;

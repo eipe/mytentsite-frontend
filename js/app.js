@@ -362,7 +362,9 @@
                 }
             },
             destruct: function() {
-                Webcam.reset();
+                if(Webcam.userMedia) {
+                    Webcam.reset();
+                }
             }
         }
     }

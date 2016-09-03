@@ -196,13 +196,14 @@
     }
 
     function Wall() {
-        var $wallImageContainer = $("#wall-images"),
+        var $wall = $("#wall"),
+            $wallImageContainer = $("#wall-images"),
             $wallFullscreen = $("#wall-fullscreen"),
+            $preLoadedContainers = $wallImageContainer.find(".wall-image-container"),
+            index = $preLoadedContainers.index(),
             loaded = false;
 
         function createImageWall(sites) {
-            var $preLoadedContainers = $wallImageContainer.find(".wall-image-container"),
-                index = $preLoadedContainers.index();
             $.each(sites, function(key, photo) {
                 var $container = $preLoadedContainers.eq(index);
                 index++;
@@ -262,6 +263,13 @@
                     loaded = true;
                     sites.onFetchedSites(function(sites) {
                         createImageWall(sites);
+                    });
+
+                    $("#wall-load-more").on("click", function() {
+                        sites.onFetchedSites(function(sites) {
+                            createImageWall(sites);
+                        });
+                        $wall.animate({scrollTop: $wall.prop("scrollHeight") - 185}, 1000);
                     });
                 }
             },

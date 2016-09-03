@@ -279,12 +279,27 @@
     }
 
     function Camera() {
-        var $photo, $shutter, $cancel, $store, $location, location, loaded = false;
+        var webCamera, snapshot, $shutter, $cancel, $store, $location, location, loaded = false;
 
         function uploadPicture(callback) {
-            Webcam.snap(function(data_uri) {
-                Webcam.upload(data_uri, 'upload.php', function(code, text) {
-                    callback(code, text);
+            if(typeof location == typeof undefined) {
+                console.log("Missing location data");
+                return false;
+            }
+            snapshot.get_blob(function(photoData) {
+                $.ajax({
+                    type: "POST",
+                    url: "upload.php",
+                    data: {
+                        photo: photoData,
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                        caption: $("#camera-photo-caption").val()
+                    },
+                    processData: false,
+                    contentType: false
+                }).done(function(data) {
+                    callback(data);
                 });
             });
         }
@@ -296,6 +311,7 @@
         }
 
         function clearPhotoDetails() {
+            webCamera.show_stream();
             $("#camera-photo-caption").val("");
             $location.removeAttr("location");
             $location.toggleClass("success");
@@ -311,18 +327,18 @@
         }
 
         function setupCameraAndListeners() {
-            $photo = $("#camera-photo");
             $shutter = $("#camera-photo-shutter");
             $location = $("#camera-photo-location");
             $cancel = $("#camera-photo-cancel");
             $store = $("#camera-photo-store");
             $shutter.on("click", function() {
-                Webcam.freeze();
+                snapshot = webCamera.capture();
+                snapshot.show();
                 togglePhotoControllers();
             });
 
             $cancel.on("click", function() {
-                Webcam.unfreeze();
+                webCamera.show_stream();
                 togglePhotoControllers();
             });
 
@@ -353,18 +369,25 @@
             });
         }
 
+        function getCameraConfig() {
+            return {
+                shutter: false,
+                on_debug: function () {},
+                shutter_ogg_url: "bower_components/jpeg_camera/dist/shutter.ogg",
+                shutter_mp3_url: "bower_components/jpeg_camera/dist/shutter.mp3",
+                swf_url: "bower_components/jpeg_camera/dist/jpeg_camera.swf"
+            }
+        }
+
         return {
             initialize: function() {
-                Webcam.attach("#camera-photo");
                 if(!loaded) {
                     loaded = true;
+                    webCamera = new JpegCamera("#camera-photo", getCameraConfig()).ready(function(info) {});
                     setupCameraAndListeners();
                 }
             },
             destruct: function() {
-                if(Webcam.userMedia) {
-                    Webcam.reset();
-                }
             }
         }
     }

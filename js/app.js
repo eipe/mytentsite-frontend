@@ -284,6 +284,13 @@
             $location.toggleClass("success");
         }
 
+        function setLocation(latitude, longitude, accuracy) {
+            $(this).data("location", true).addClass("success").attr("title", "Location found");
+            location.latitude = latitude;
+            location.longitude = longitude;
+            location.accuracy = accuracy;
+        }
+
         function setupCameraAndListeners() {
             $photo = $("#camera-photo");
             $shutter = $("#camera-photo-shutter");
@@ -315,13 +322,7 @@
                         return;
                     }
                     navigator.geolocation.getCurrentPosition(function(position) {
-                        $(this).data("location", true);
-                        $location.addClass("success").attr("title", "Location found");
-                        location = {
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude,
-                            accuracy: position.coords.accuracy
-                        };
+                        setLocation(position.coords.latitude, position.coords.longitude, position.coords.accuracy);
                     }, function() {
                         $location.addClass("warning");
                         $(this).data("location", false);

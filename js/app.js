@@ -334,6 +334,9 @@
             $cancel = $("#camera-photo-cancel");
             $store = $("#camera-photo-store");
             $shutter.on("click", function() {
+                if(Webcam.loaded === false) {
+                    return;
+                }
                 Webcam.freeze();
                 togglePhotoControllers();
             });

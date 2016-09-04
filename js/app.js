@@ -347,6 +347,9 @@
             });
 
             $store.on("click", function() {
+                if(!location) {
+                    return false;
+                }
                 uploadPicture(function(code, text) {
                     clearPhotoDetails();
                     togglePhotoControllers();

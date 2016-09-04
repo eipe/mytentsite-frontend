@@ -357,8 +357,12 @@
                     return false;
                 }
                 uploadPicture(function(code, text) {
-                    clearPhotoDetails();
-                    togglePhotoControllers();
+                    if(code === 200) {
+                        clearPhotoDetails();
+                        togglePhotoControllers();
+                    } else {
+                        // Todo: Add some information to user - try again
+                    }
                 });
             });
 

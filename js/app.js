@@ -199,6 +199,7 @@
         var $wall = $("#wall"),
             $wallImageContainer = $("#wall-images"),
             $wallFullscreen = $("#wall-fullscreen"),
+            $wallLoadMore = $("#wall-load-more"),
             $preLoadedContainers = $wallImageContainer.find(".wall-image-container"),
             index = $preLoadedContainers.index(),
             loaded = false;
@@ -263,9 +264,10 @@
                     loaded = true;
                     sites.onFetchedSites(function(sites) {
                         createImageWall(sites);
+                        $wallLoadMore.removeClass("is-hidden");
                     });
 
-                    $("#wall-load-more").on("click", function() {
+                    $wallLoadMore.on("click", function() {
                         sites.onFetchedSites(function(sites) {
                             createImageWall(sites);
                         });

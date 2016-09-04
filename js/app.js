@@ -281,7 +281,8 @@
     }
 
     function Camera() {
-        var $photo, $shutter, $cancel, $store, $location, location, loaded = false, options = {target: "upload.php"};
+        var $photo, $shutter, $cancel, $store, $location, location = null,
+            loaded = false, options = {target: "upload.php"};
 
         function extractBase64FromDataUri(data_uri) {
             return data_uri.replace(/^data\:image\/\w+\;base64\,/, '');
@@ -314,8 +315,13 @@
 
         function clearPhotoDetails() {
             $("#camera-photo-caption").val("");
-            $location.removeAttr("location");
+            clearLocation();
+        }
+
+        function clearLocation() {
+            $location.removeData("location");
             $location.toggleClass("success");
+            location = null;
         }
 
         function setLocation(lat, lng, accuracy) {

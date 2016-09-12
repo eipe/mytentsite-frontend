@@ -309,7 +309,8 @@
                         photo: extractBase64FromDataUri(data_uri),
                         latitude: location.latitude,
                         longitude: location.longitude,
-                        caption: $("#camera-photo-caption").val()
+                        caption: $("#camera-photo-caption").val(),
+                        title: ""
                     }
                 }).success(function(response) {
                     callback(200, response);

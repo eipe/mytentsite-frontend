@@ -32,7 +32,10 @@
             if(hasExtendedCacheLifeTime()) {
                 localStorage.removeItem("Sites.all");
             }
-            if(localStorage.getItem("Sites.all")) {
+
+            var storedImages = localStorage.getItem("Sites.all");
+
+            if(storedImages) {
                 fncCallbackOnFetchedSites(JSON.parse(localStorage.getItem("Sites.all")));
             } else {
                 $.ajax({
@@ -58,8 +61,17 @@
                                 });
                             });
                         }
+
+                        if(!storedImages) {
+                            storedImages = [];
+                        } else {
+                            storedImages = JSON.parse(storedImages);
+                        }
+
+                        storedImages = storedImages.concat(tentSites);
+
                         localStorage.setItem("Sites.lastFetchTime", getTime());
-                        localStorage.setItem("Sites.all", JSON.stringify(tentSites));
+                        localStorage.setItem("Sites.all", JSON.stringify(storedImages));
                         fncCallbackOnFetchedSites(tentSites);
                     }, error: function(error) {
                         console.log(error);

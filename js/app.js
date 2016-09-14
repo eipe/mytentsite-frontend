@@ -300,24 +300,36 @@
             return data_uri.replace(/^data\:image\/\w+\;base64\,/, '');
         }
 
-        function uploadPicture(callback) {
-            Webcam.snap(function(data_uri) {
-                $.ajax({
-                    url: options.target,
-                    method: "POST",
-                    data: {
-                        photo: extractBase64FromDataUri(data_uri),
-                        latitude: location.latitude,
-                        longitude: location.longitude,
-                        caption: $("#camera-photo-caption").val(),
-                        title: " "
-                    }
-                }).success(function(response) {
-                    callback(200, response);
-                }).error(function(response) {
-                    callback(400, response);
-                });
+        function uploadPicture(photo, callback) {
+            $.ajax({
+                url: options.target,
+                method: "POST",
+                data: {
+                    photo: photo,
+                    latitude: location.latitude,
+                    longitude: location.longitude,
+                    caption: $("#camera-photo-caption").val(),
+                    title: " "
+                }
+            }).success(function(response) {
+                callback(200, response);
+            }).error(function(response) {
+                callback(400, response);
             });
+        }
+
+        function storePicture(callback) {
+            if(typeof $uploader.prop("files") !== typeof undefined) {
+                var fileReader = new FileReader();
+                fileReader.addEventListener("load", function(e) {
+                    uploadPicture(fileReader.result, callback);
+                });
+                fileReader.readAsDataURL($uploader.prop("files")[0]);
+            } else {
+                Webcam.snap(function(data_uri) {
+                    uploadPicture(extractBase64FromDataUri(data_uri), callback);
+                });
+            }
         }
 
         function togglePhotoControllers() {
@@ -374,7 +386,7 @@
                 if(!location) {
                     return false;
                 }
-                uploadPicture(function(code, text) {
+                storePicture(function(code, text) {
                     if(code === 200) {
                         clearPhotoDetails();
                         togglePhotoControllers();

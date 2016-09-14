@@ -293,7 +293,7 @@
     }
 
     function Camera() {
-        var $photo, $shutter, $cancel, $store, $location, location = null,
+        var $photo, $shutter, $cancel, $store, $location, location = null, $uploader, $uploaderLabel,
             loaded = false, options = {target: "upload.php"};
 
         function extractBase64FromDataUri(data_uri) {
@@ -310,7 +310,7 @@
                         latitude: location.latitude,
                         longitude: location.longitude,
                         caption: $("#camera-photo-caption").val(),
-                        title: ""
+                        title: " "
                     }
                 }).success(function(response) {
                     callback(200, response);
@@ -324,6 +324,7 @@
             $store.toggleClass("is-hidden");
             $shutter.toggleClass("is-hidden");
             $cancel.toggleClass("is-hidden");
+            $uploaderLabel.toggleClass("is-hidden");
         }
 
         function clearPhotoDetails() {
@@ -352,6 +353,9 @@
             $location = $("#camera-photo-location");
             $cancel = $("#camera-photo-cancel");
             $store = $("#camera-photo-store");
+            $uploader = $("#camera-photo-file");
+            $uploaderLabel = $('label[for="camera-photo-file"]');
+
             $shutter.on("click", function() {
                 if(Webcam.loaded === false) {
                     return;
@@ -362,6 +366,7 @@
 
             $cancel.on("click", function() {
                 Webcam.unfreeze();
+                clearPhotoDetails();
                 togglePhotoControllers();
             });
 
@@ -396,6 +401,29 @@
                     $location.addClass("secondary");
                     location = null;
                 }
+            });
+
+            $uploader.on("change", function() {
+                EXIF.getData($(this).prop("files")[0], function() {
+                    if(typeof EXIF.getTag(this, 'GPSLatitude') === typeof undefined) {
+                        // Throw error as this image does not have required EXIF data
+                        console.log("Photo does not have valid exif data");
+                        return false;
+                    }
+
+                    var exifData = EXIF.getAllTags(this),
+                        lat = exifData.GPSLatitude,
+                        lng = exifData.GPSLongitude;
+
+                    // Convert coordinates to WGS84 decimal
+                    var latRef = exifData.GPSLatitudeRef || "N";
+                    var lngRef = exifData.GPSLongitudeRef || "W";
+                    lat = (lat[0] + lat[1]/60 + lat[2]/3600) * (latRef == "N" ? 1 : -1);
+                    lng = (lng[0] + lng[1]/60 + lng[2]/3600) * (lngRef == "W" ? -1 : 1);
+
+                    setLocation(lat, lng);
+                    togglePhotoControllers();
+                });
             });
         }
 

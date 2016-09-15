@@ -293,7 +293,7 @@
     }
 
     function Camera() {
-        var $photo, $shutter, $cancel, $store, $location, location = null, $uploader, $uploaderLabel,
+        var $photo, $shutter, $cancel, $store, $location, location = null, $uploader, $uploaderLabel, $caption,
             loaded = false, options = {target: "upload.php"};
 
         function extractBase64FromDataUri(data_uri) {
@@ -308,7 +308,7 @@
                     photo: photo,
                     latitude: location.latitude,
                     longitude: location.longitude,
-                    caption: $("#camera-photo-caption").val(),
+                    caption: $caption.val(),
                     title: " "
                 }
             }).success(function(response) {
@@ -340,7 +340,8 @@
         }
 
         function clearPhotoDetails() {
-            $("#camera-photo-caption").val("");
+            $caption.val("");
+            $uploader.val("");
             clearLocation();
             turnCameraOn();
         }
@@ -362,6 +363,7 @@
 
         function setupCameraAndListeners() {
             $photo = $("#camera-photo");
+            $caption = $("#camera-photo-caption");
             $shutter = $("#camera-photo-shutter");
             $location = $("#camera-photo-location");
             $cancel = $("#camera-photo-cancel");

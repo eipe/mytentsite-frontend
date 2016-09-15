@@ -419,7 +419,8 @@
             });
 
             $uploader.on("change", function() {
-                EXIF.getData($(this).prop("files")[0], function() {
+                var file = $(this).prop("files")[0];
+                EXIF.getData(file, function() {
                     if(typeof EXIF.getTag(this, 'GPSLatitude') === typeof undefined) {
                         // Throw error as this image does not have required EXIF data
                         console.log("Photo does not have valid exif data");
@@ -439,6 +440,16 @@
                     setLocation(lat, lng);
                     togglePhotoControllers();
                     turnCameraOff();
+
+                    var reader = new FileReader(),
+                        $previewImage = $("<img>");
+
+                    reader.onload = function (e) {
+                        $previewImage.attr("src", e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+
+                    $previewImage.appendTo($photo);
                 });
             });
         }

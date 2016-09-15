@@ -342,6 +342,7 @@
         function clearPhotoDetails() {
             $("#camera-photo-caption").val("");
             clearLocation();
+            turnCameraOn();
         }
 
         function clearLocation() {
@@ -435,8 +436,19 @@
 
                     setLocation(lat, lng);
                     togglePhotoControllers();
+                    turnCameraOff();
                 });
             });
+        }
+
+        function turnCameraOn() {
+            Webcam.attach("#camera-photo");
+        }
+
+        function turnCameraOff() {
+            if(Webcam.userMedia) {
+                Webcam.reset();
+            }
         }
 
         return {
@@ -448,9 +460,7 @@
                 }
             },
             destruct: function() {
-                if(Webcam.userMedia) {
-                    Webcam.reset();
-                }
+                turnCameraOff();
             }
         }
     }

@@ -3,7 +3,7 @@
  */
 (function($) {
     'use strict';
-    var view, camera, map, wall, sites;
+    var view, photo, map, wall, sites;
 
     function getTime() {
         if(typeof Date.now !== typeof undefined) {
@@ -250,7 +250,7 @@
                 e.stopPropagation();
                 var $photoContainer = $(this).closest(".wall-image-container");
                 $wallFullscreen.attr("data-image-latitude", $photoContainer.data("image-latitude")).
-                    attr("data-image-longitude", $photoContainer.data("image-longitude"));
+                attr("data-image-longitude", $photoContainer.data("image-longitude"));
                 $wallFullscreen.find("img").attr("src", $photoContainer.data("image-location"));
                 $wallFullscreen.foundation("open");
             });
@@ -292,7 +292,7 @@
         }
     }
 
-    function Camera() {
+    function Photo() {
         var $photo, $cancel, $store, $location, location = null, $uploader, $uploaderLabel, $caption,
             loaded = false, options = {target: "upload.php"};
 
@@ -325,7 +325,7 @@
         }
 
         function togglePhotoControllers() {
-            $("#camera-controllers").toggleClass("is-hidden");
+            $("#photo-controllers").toggleClass("is-hidden");
             $uploaderLabel.toggleClass("is-hidden");
         }
 
@@ -352,13 +352,13 @@
         }
 
         function setupListeners() {
-            $photo = $("#camera-photo");
-            $caption = $("#camera-photo-caption");
-            $location = $("#camera-photo-location");
-            $cancel = $("#camera-photo-cancel");
-            $store = $("#camera-photo-store");
-            $uploader = $("#camera-photo-file");
-            $uploaderLabel = $('label[for="camera-photo-file"]');
+            $photo = $("#photo-frame");
+            $caption = $("#photo-caption");
+            $location = $("#photo-location");
+            $cancel = $("#photo-cancel");
+            $store = $("#photo-store");
+            $uploader = $("#photo-file");
+            $uploaderLabel = $('label[for="photo-file"]');
 
             $cancel.on("click", function() {
                 clearPhotoDetails();
@@ -439,8 +439,8 @@
         function destructCurrentPage() {
             toggleCurrentPage();
             if(typeof currentPageName !== typeof undefined) {
-                if(currentPageName == "camera") {
-                    camera.destruct();
+                if(currentPageName == "photo") {
+                    photo.destruct();
                 } else if(currentPageName == "map") {
                     map.destruct();
                 } else if(currentPageName == "wall") {
@@ -452,8 +452,8 @@
         function initializeCurrentPage() {
             toggleCurrentPage();
             if(typeof currentPageName !== typeof undefined) {
-                if(currentPageName == "camera") {
-                    camera.initialize();
+                if(currentPageName == "photo") {
+                    photo.initialize();
                 } else if(currentPageName == "map") {
                     map.initialize();
                 } else if(currentPageName == "wall") {
@@ -485,7 +485,7 @@
         return {
             initialize: function() {
                 sites = new Sites();
-                camera = new Camera();
+                photo = new Photo();
                 map = new Map();
                 wall = new Wall();
                 var $menu = $("#menu");

@@ -19,8 +19,8 @@
     <body>
         <nav class="top-bar">
             <ul id="menu" class="menu align-center" data-page-default="map">
-                <li data-page="camera">
-                    <a href="#/camera"><i class="fa fa-camera"></i></a>
+                <li data-page="photo">
+                    <a href="#/photo"><i class="fa fa-camera"></i></a>
                 </li>
                 <li data-page="map">
                     <a href="#/map" title="">
@@ -38,23 +38,23 @@
             </ul>
         </nav>
         <div id="content">
-            <div class="page is-hidden" id="camera">
-                <div id="camera-photo">
-                    <label for="camera-photo-file" class="button" id="camera-test">
+            <div class="page is-hidden" id="photo">
+                <div id="photo-frame">
+                    <label for="photo-file" class="button">
                         I have a stored photo to upload
                     </label>
-                    <input type="file" id="camera-photo-file" class="show-for-sr">
+                    <input type="file" id="photo-file" class="show-for-sr">
                 </div>
-                <div id="camera-controllers" class="input-group is-hidden">
+                <div id="photo-controllers" class="input-group is-hidden">
                     <span class="input-group-label" title="Caption"><i class="fa fa-font"></i></span>
-                    <input type="text" id="camera-photo-caption" class="input-group-field"
+                    <input type="text" id="photo-caption" class="input-group-field"
                            title="Caption" placeholder="Caption" />
                     <div class="input-group-button">
-                        <button id="camera-photo-location" class="button secondary" title="Add location">
+                        <button id="photo-location" class="button secondary" title="Add location">
                             <i class="fa fa-map-marker"></i>
-                        </button><button id="camera-photo-cancel" class="button alert" title="Cancel">
+                        </button><button id="photo-cancel" class="button alert" title="Cancel">
                             <i class="fa fa-remove"></i>
-                        </button><button id="camera-photo-store" class="button success" title="Upload photo">
+                        </button><button id="photo-store" class="button success" title="Upload photo">
                             <i class="fa fa-check"></i>
                         </button>
                     </div>

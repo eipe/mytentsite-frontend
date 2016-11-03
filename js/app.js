@@ -296,10 +296,6 @@
         var $photo, $cancel, $store, $location, location = null, $uploader, $uploaderLabel, $caption,
             loaded = false, options = {target: "upload.php"};
 
-        function extractBase64FromDataUri(data_uri) {
-            return data_uri.replace(/^data\:image\/\w+\;base64\,/, '');
-        }
-
         function uploadPicture(photo, callback) {
             $.ajax({
                 url: options.target,

@@ -39,25 +39,26 @@
         </nav>
         <div id="content">
             <div class="page is-hidden" id="camera">
-                <div id="camera-photo"></div>
-                <div class="input-group">
+                <div id="camera-photo">
+                    <label for="camera-photo-file" class="button" id="camera-test">
+                        I have a stored photo to upload
+                    </label>
+                    <input type="file" id="camera-photo-file" class="show-for-sr">
+                </div>
+                <div id="camera-controllers" class="input-group is-hidden">
                     <span class="input-group-label" title="Caption"><i class="fa fa-font"></i></span>
                     <input type="text" id="camera-photo-caption" class="input-group-field"
                            title="Caption" placeholder="Caption" />
                     <div class="input-group-button">
                         <button id="camera-photo-location" class="button secondary" title="Add location">
                             <i class="fa fa-map-marker"></i>
-                        </button><button class="button" id="camera-photo-shutter" title="Take photo">
-                            <i class="fa fa-camera"></i>
-                        </button><button id="camera-photo-cancel" class="button alert is-hidden" title="Cancel">
+                        </button><button id="camera-photo-cancel" class="button alert" title="Cancel">
                             <i class="fa fa-remove"></i>
-                        </button><button id="camera-photo-store" class="button success is-hidden" title="Upload photo">
+                        </button><button id="camera-photo-store" class="button success" title="Upload photo">
                             <i class="fa fa-check"></i>
                         </button>
                     </div>
                 </div>
-                <label for="camera-photo-file" class="button">I have a stored photo to upload</label>
-                <input type="file" id="camera-photo-file" class="show-for-sr">
             </div>
             <div class="page is-hidden" id="map"></div>
             <div class="page is-hidden" id="wall">
@@ -97,7 +98,6 @@
         <script src="bower_components/Leaflet.Photo/Leaflet.Photo.js"></script>
         <script src="bower_components/Leaflet.EasyButton/src/easy-button.js"></script>
         <script src="bower_components/foundation-sites/dist/foundation.min.js"></script>
-        <script src="bower_components/webcamjs/webcam.js"></script>
         <script src="bower_components/exif-js/exif.js"></script>
         <script src="js/app.js"></script>
     </body>

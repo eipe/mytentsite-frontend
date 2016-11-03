@@ -16,7 +16,7 @@
 
     function Sites() {
         var fncCallbackOnFetchedSites,
-            strSiteApiUrl = "http://api.mytent.site/tentsites";
+            strSiteApiUrl = "http://mytent.site/tentsites";
 
         function hasExtendedCacheLifeTime() {
             var intLastFetchTime = localStorage.getItem("Sites.lastFetchTime");
@@ -293,7 +293,7 @@
     }
 
     function Camera() {
-        var $photo, $shutter, $cancel, $store, $location, location = null, $uploader, $uploaderLabel, $caption,
+        var $photo, $cancel, $store, $location, location = null, $uploader, $uploaderLabel, $caption,
             loaded = false, options = {target: "upload.php"};
 
         function extractBase64FromDataUri(data_uri) {
@@ -325,25 +325,19 @@
                     uploadPicture(fileReader.result, callback);
                 });
                 fileReader.readAsDataURL($uploader.prop("files")[0]);
-            } else {
-                Webcam.snap(function(data_uri) {
-                    uploadPicture(extractBase64FromDataUri(data_uri), callback);
-                });
             }
         }
 
         function togglePhotoControllers() {
-            $store.toggleClass("is-hidden");
-            $shutter.toggleClass("is-hidden");
-            $cancel.toggleClass("is-hidden");
+            $("#camera-controllers").toggleClass("is-hidden");
             $uploaderLabel.toggleClass("is-hidden");
         }
 
         function clearPhotoDetails() {
             $caption.val("");
             $uploader.val("");
+            $photo.find("img").remove();
             clearLocation();
-            turnCameraOn();
         }
 
         function clearLocation() {
@@ -361,26 +355,16 @@
             };
         }
 
-        function setupCameraAndListeners() {
+        function setupListeners() {
             $photo = $("#camera-photo");
             $caption = $("#camera-photo-caption");
-            $shutter = $("#camera-photo-shutter");
             $location = $("#camera-photo-location");
             $cancel = $("#camera-photo-cancel");
             $store = $("#camera-photo-store");
             $uploader = $("#camera-photo-file");
             $uploaderLabel = $('label[for="camera-photo-file"]');
 
-            $shutter.on("click", function() {
-                if(Webcam.loaded === false) {
-                    return;
-                }
-                Webcam.freeze();
-                togglePhotoControllers();
-            });
-
             $cancel.on("click", function() {
-                Webcam.unfreeze();
                 clearPhotoDetails();
                 togglePhotoControllers();
             });
@@ -397,25 +381,6 @@
                         // Todo: Add some information to user - try again
                     }
                 });
-            });
-
-            $location.on("click", function() {
-                if(!$(this).data("location")) {
-                    if(typeof navigator.geolocation === typeof undefined) {
-                        $location.addClass("warning");
-                        $(this).data("location", false);
-                        return;
-                    }
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        setLocation(position.coords.latitude, position.coords.longitude, position.coords.accuracy);
-                    }, function() {
-                        $location.addClass("warning");
-                        $(this).data("location", false);
-                    });
-                } else {
-                    $location.addClass("secondary");
-                    location = null;
-                }
             });
 
             $uploader.on("change", function() {
@@ -439,7 +404,6 @@
 
                     setLocation(lat, lng);
                     togglePhotoControllers();
-                    turnCameraOff();
 
                     var reader = new FileReader(),
                         $previewImage = $("<img>");
@@ -454,26 +418,14 @@
             });
         }
 
-        function turnCameraOn() {
-            Webcam.attach("#camera-photo");
-        }
-
-        function turnCameraOff() {
-            if(Webcam.userMedia) {
-                Webcam.reset();
-            }
-        }
-
         return {
             initialize: function() {
-                Webcam.attach("#camera-photo");
                 if(!loaded) {
                     loaded = true;
-                    setupCameraAndListeners();
+                    setupListeners();
                 }
             },
             destruct: function() {
-                turnCameraOff();
             }
         }
     }

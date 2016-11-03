@@ -371,6 +371,9 @@
                 }
                 storePicture(function(code, text) {
                     if(code === 200) {
+                        $uploaderLabel
+                            .addClass("success")
+                            .text("Photo successfully uploaded. Click to upload a new photo");
                         clearPhotoDetails();
                         togglePhotoControllers();
                     } else {
@@ -379,12 +382,16 @@
                 });
             });
 
+            $uploaderLabel.on("click", function() {
+                $(this).removeClass("alert success").text($(this).data("text"));
+            });
+
             $uploader.on("change", function() {
                 var file = $(this).prop("files")[0];
                 EXIF.getData(file, function() {
                     if(typeof EXIF.getTag(this, 'GPSLatitude') === typeof undefined) {
                         // Throw error as this image does not have required EXIF data
-                        console.log("Photo does not have valid exif data");
+                        $uploaderLabel.addClass("alert").text("Photo does not have valid exif data, try a new one!");
                         return false;
                     }
 

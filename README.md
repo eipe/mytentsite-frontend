@@ -1,3 +1,5 @@
+# This repository has been archived and will not be maintained anymore
+
 # mytentsite-frontend
 Frontend of mytentsite working with mytentsite-backend
 
